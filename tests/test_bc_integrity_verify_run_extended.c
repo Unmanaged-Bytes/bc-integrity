@@ -357,7 +357,7 @@ static void test_verify_with_symlink_kind(void **state) {
   char link_path[512];
   snprintf(link_path, sizeof(link_path), "%s/link",
            fixture->fixture_directory);
-  symlink("target.txt", link_path);
+  assert_int_equal(symlink("target.txt", link_path), 0);
   assert_int_equal(run_manifest(fixture->fixture_directory,
                                 fixture->manifest_path, NULL),
                    0);
