@@ -10,3 +10,7 @@ missingIncludeSystem:*
 normalCheckLevelMaxBranches:*
 checkersReport
 unmatchedSuppression
+
+// Style suggestions in tests are noise, not bugs
+constVariablePointer:tests/*
+variableScope:tests/*
