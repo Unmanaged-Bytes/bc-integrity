@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: MIT
+
+unusedFunction:*/bc_core_math.h
+unusedFunction:*/bc_integrity_walk_filters.c
+unusedFunction:*/bc_containers_vector.h
+constParameterCallback:*/bc_integrity_walk_parallel.c
+knownConditionTrueFalse:*/bc_integrity_walk_serial.c
+preprocessorErrorDirective
+missingIncludeSystem:*
+normalCheckLevelMaxBranches:*
+checkersReport
+unmatchedSuppression

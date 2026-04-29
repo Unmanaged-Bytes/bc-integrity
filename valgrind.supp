@@ -1,0 +1,2 @@
+# Add entries here if genuine third-party false-positives appear in CI.
+# Do not suppress real findings.

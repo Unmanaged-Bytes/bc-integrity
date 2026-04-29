@@ -1,0 +1,12 @@
+build/
+obj-*/
+*.o
+*.a
+*.so
+*.log
+perf.data*
+core
+core.*
+compile_commands.json
+.cache/
+.vscode/

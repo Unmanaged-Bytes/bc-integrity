@@ -1,0 +1,87 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: build + test + sanitize
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build pkg-config \
+            libcmocka-dev \
+            cppcheck valgrind \
+            build-essential git
+
+      - name: Clone and install sibling libs
+        run: |
+          mkdir -p /tmp/deps && cd /tmp/deps
+          for repo in bc-core bc-allocators bc-containers bc-concurrency bc-io bc-runtime bc-hrbl; do
+            git clone --depth 1 --branch main "https://github.com/Unmanaged-Bytes/${repo}.git"
+            meson setup "${repo}/build" "${repo}" --buildtype=release --prefix=/usr/local -Dtests=false
+            sudo meson install -C "${repo}/build"
+          done
+          sudo ldconfig
+
+      - name: Configure (debug)
+        run: meson setup build/debug --buildtype=debug -Dtests=true
+
+      - name: Build
+        run: meson compile -C build/debug
+
+      - name: Test
+        run: meson test -C build/debug --print-errorlogs
+
+      - name: cppcheck
+        run: |
+          cppcheck --project=build/debug/compile_commands.json \
+            --enable=all --error-exitcode=1 --quiet --inline-suppr \
+            --suppressions-list=cppcheck-suppressions.txt
+
+      - name: Sanitizer (asan + ubsan)
+        run: |
+          meson setup build/asan --buildtype=debug -Dtests=true -Db_sanitize=address,undefined
+          meson test -C build/asan --print-errorlogs
+
+      - name: Sanitizer (tsan)
+        run: |
+          meson setup build/tsan --buildtype=debug -Dtests=true -Db_sanitize=thread
+          meson test -C build/tsan --print-errorlogs
+
+      - name: Release build + test
+        run: |
+          meson setup build/release --buildtype=release -Dtests=true
+          meson compile -C build/release
+          meson test -C build/release --print-errorlogs
+
+      - name: Valgrind memcheck
+        run: |
+          meson setup build/memcheck --buildtype=debug -Dtests=true -Db_sanitize=none
+          meson compile -C build/memcheck
+          SUPP_FLAG=""
+          if [ -f valgrind.supp ]; then
+            SUPP_FLAG="--suppressions=$(pwd)/valgrind.supp"
+          fi
+          meson test -C build/memcheck --wrap="valgrind \
+            --error-exitcode=1 \
+            --leak-check=full \
+            --show-leak-kinds=definite,possible \
+            --track-origins=yes \
+            --num-callers=20 \
+            $SUPP_FLAG" \
+            --timeout-multiplier=20 --print-errorlogs

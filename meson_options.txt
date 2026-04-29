@@ -1,0 +1,3 @@
+option('tests',   type : 'boolean', value : true,  description : 'Build tests')
+option('fuzzing', type : 'boolean', value : false, description : 'Build fuzz harnesses')
+option('arch',    type : 'string',  value : '',    description : 'Target architecture for -march (empty = x86-64-v3)')
