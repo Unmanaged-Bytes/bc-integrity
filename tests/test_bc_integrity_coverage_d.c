@@ -425,7 +425,7 @@ static void test_main_manifest_follow_symlinks(void **state) {
            fixture->fixture_directory);
   snprintf(link_path, sizeof(link_path), "%s/sym_link",
            fixture->fixture_directory);
-  symlink(target_path, link_path);
+  assert_int_equal(symlink(target_path, link_path), 0);
   char *argv[16];
   size_t cursor = 0;
   argv[cursor++] = (char *)BC_INTEGRITY_TEST_BINARY_PATH;
