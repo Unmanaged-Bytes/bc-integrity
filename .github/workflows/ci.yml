@@ -25,6 +25,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             meson ninja-build pkg-config \
             libcmocka-dev \
+            libxxhash-dev liburing-dev \
             cppcheck valgrind \
             build-essential git
 
