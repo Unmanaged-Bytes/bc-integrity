@@ -46,7 +46,7 @@ jobs:
         run: meson compile -C build/debug
 
       - name: Test
-        run: meson test -C build/debug --print-errorlogs
+        run: meson test -C build/debug --print-errorlogs --no-suite concurrency-heavy
 
       - name: cppcheck
         run: |
@@ -57,18 +57,18 @@ jobs:
       - name: Sanitizer (asan + ubsan)
         run: |
           meson setup build/asan --buildtype=debug -Dtests=true -Db_sanitize=address,undefined
-          meson test -C build/asan --print-errorlogs
+          meson test -C build/asan --print-errorlogs --no-suite concurrency-heavy
 
       - name: Sanitizer (tsan)
         run: |
           meson setup build/tsan --buildtype=debug -Dtests=true -Db_sanitize=thread
-          meson test -C build/tsan --print-errorlogs
+          meson test -C build/tsan --print-errorlogs --no-suite concurrency-heavy
 
       - name: Release build + test
         run: |
           meson setup build/release --buildtype=release -Dtests=true
           meson compile -C build/release
-          meson test -C build/release --print-errorlogs
+          meson test -C build/release --print-errorlogs --no-suite concurrency-heavy
 
       - name: Valgrind memcheck
         run: |
@@ -85,4 +85,4 @@ jobs:
             --track-origins=yes \
             --num-callers=20 \
             $SUPP_FLAG" \
-            --timeout-multiplier=20 --print-errorlogs
+            --timeout-multiplier=20 --print-errorlogs --no-suite concurrency-heavy

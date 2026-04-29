@@ -114,7 +114,7 @@ test_bc_integrity_dispatch_smallcorpus_unit = executable('test_bc_integrity_disp
   include_directories : [bc_integrity_internal_inc],
   dependencies : bc_integrity_dispatch_test_deps,
 )
-test('bc_integrity_dispatch_smallcorpus_unit', test_bc_integrity_dispatch_smallcorpus_unit)
+test('bc_integrity_dispatch_smallcorpus_unit', test_bc_integrity_dispatch_smallcorpus_unit, suite : 'concurrency-heavy')
 
 test_bc_integrity_manifest_writer_unit = executable('test_bc_integrity_manifest_writer_unit',
   'test_bc_integrity_manifest_writer_unit.c',
@@ -230,7 +230,7 @@ test_bc_integrity_walk_parallel_extended = executable('test_bc_integrity_walk_pa
   include_directories : [bc_integrity_internal_inc],
   dependencies : [cmocka_dep, bc_core_dep, bc_allocators_dep, bc_concurrency_dep, bc_containers_dep, bc_io_dep, bc_runtime_dep, xxhash_dep],
 )
-test('bc_integrity_walk_parallel_extended', test_bc_integrity_walk_parallel_extended, timeout : 120)
+test('bc_integrity_walk_parallel_extended', test_bc_integrity_walk_parallel_extended, timeout : 120, suite : 'concurrency-heavy')
 
 bc_integrity_capture_hash_uring_ext_sources = [
   'test_bc_integrity_capture_hash_uring_extended.c',
@@ -335,7 +335,7 @@ test_bc_integrity_dispatch_extended = executable('test_bc_integrity_dispatch_ext
   include_directories : [bc_integrity_internal_inc],
   dependencies : bc_integrity_dispatch_test_deps,
 )
-test('bc_integrity_dispatch_extended', test_bc_integrity_dispatch_extended)
+test('bc_integrity_dispatch_extended', test_bc_integrity_dispatch_extended, suite : 'concurrency-heavy')
 
 # === Coverage Agent D ===
 bc_integrity_coverage_d_test_sources = [

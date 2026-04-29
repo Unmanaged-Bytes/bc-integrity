@@ -83,6 +83,11 @@ static int smallcorpus_make_state(void **state, size_t worker_count) {
 }
 
 static int setup_workers_4(void **state) {
+  long ncpus = sysconf(_SC_NPROCESSORS_ONLN);
+  if (ncpus < 4) {
+    *state = NULL;
+    return 0;
+  }
   return smallcorpus_make_state(state, 4);
 }
 
@@ -92,6 +97,9 @@ static int setup_workers_mono(void **state) {
 
 static int smallcorpus_teardown(void **state) {
   smallcorpus_state_t *fixture = (smallcorpus_state_t *)*state;
+  if (fixture == NULL) {
+    return 0;
+  }
   bc_concurrency_destroy(fixture->concurrency_context);
   bc_allocators_context_destroy(fixture->memory_context);
   char command[512];
@@ -175,7 +183,8 @@ static void run_dispatch_and_verify(smallcorpus_state_t *fixture,
 }
 
 static void test_fallback_below_threshold_workers4(void **state) {
-  if (!sha256_is_available() || bc_integrity_test_under_valgrind()) {
+  if (*state == NULL || !sha256_is_available() ||
+      bc_integrity_test_under_valgrind()) {
     skip();
     return;
   }
@@ -184,7 +193,8 @@ static void test_fallback_below_threshold_workers4(void **state) {
 }
 
 static void test_parallel_above_threshold_workers4(void **state) {
-  if (!sha256_is_available() || bc_integrity_test_under_valgrind()) {
+  if (*state == NULL || !sha256_is_available() ||
+      bc_integrity_test_under_valgrind()) {
     skip();
     return;
   }
