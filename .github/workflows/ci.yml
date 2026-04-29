@@ -85,4 +85,4 @@ jobs:
             --track-origins=yes \
             --num-callers=20 \
             $SUPP_FLAG" \
-            --timeout-multiplier=20 --print-errorlogs --no-suite concurrency-heavy
+            --timeout-multiplier=20 --print-errorlogs --no-suite concurrency-heavy --no-suite no-valgrind

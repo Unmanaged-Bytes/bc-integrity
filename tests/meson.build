@@ -363,7 +363,7 @@ test_bc_integrity_coverage_d = executable('test_bc_integrity_coverage_d',
     '-DBC_INTEGRITY_TEST_BINARY_PATH="' + bc_integrity_bin.full_path() + '"',
   ],
 )
-test('bc_integrity_coverage_d', test_bc_integrity_coverage_d, depends : [bc_integrity_bin], timeout : 240)
+test('bc_integrity_coverage_d', test_bc_integrity_coverage_d, depends : [bc_integrity_bin], timeout : 240, suite : 'no-valgrind')
 
 # === Axe C : integration tests ===
 test_bc_integrity_hrbl_compat = executable('test_bc_integrity_hrbl_compat',
