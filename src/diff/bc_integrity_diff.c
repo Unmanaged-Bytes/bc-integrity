@@ -410,13 +410,13 @@ static bool bc_integrity_diff_load_side(bc_allocators_context_t *memory_context,
           memory_context, sizeof(bc_integrity_diff_record_t),
           BC_INTEGRITY_DIFF_INITIAL_VECTOR_CAPACITY,
           BC_INTEGRITY_DIFF_MAX_VECTOR_CAPACITY, &vector)) {
-    bc_hrbl_reader_destroy(*out_reader);
+    bc_hrbl_reader_close(*out_reader);
     *out_reader = NULL;
     return false;
   }
   if (!bc_integrity_diff_collect_entries(memory_context, *out_reader, vector)) {
     bc_containers_vector_destroy(memory_context, vector);
-    bc_hrbl_reader_destroy(*out_reader);
+    bc_hrbl_reader_close(*out_reader);
     *out_reader = NULL;
     return false;
   }
@@ -427,7 +427,7 @@ static bool bc_integrity_diff_load_side(bc_allocators_context_t *memory_context,
                                      count * sizeof(bc_integrity_diff_record_t),
                                      (void **)&array)) {
       bc_containers_vector_destroy(memory_context, vector);
-      bc_hrbl_reader_destroy(*out_reader);
+      bc_hrbl_reader_close(*out_reader);
       *out_reader = NULL;
       return false;
     }
@@ -490,7 +490,7 @@ bool bc_integrity_diff_run(bc_allocators_context_t *memory_context,
     if (records_a != NULL) {
       bc_allocators_pool_free(memory_context, records_a);
     }
-    bc_hrbl_reader_destroy(reader_a);
+    bc_hrbl_reader_close(reader_a);
     *out_exit_code = BC_INTEGRITY_DIFF_EXIT_ERROR;
     return true;
   }
@@ -663,8 +663,8 @@ bool bc_integrity_diff_run(bc_allocators_context_t *memory_context,
   if (records_b != NULL) {
     bc_allocators_pool_free(memory_context, records_b);
   }
-  bc_hrbl_reader_destroy(reader_a);
-  bc_hrbl_reader_destroy(reader_b);
+  bc_hrbl_reader_close(reader_a);
+  bc_hrbl_reader_close(reader_b);
 
   *out_exit_code = (change_count == 0) ? BC_INTEGRITY_DIFF_EXIT_OK
                                        : BC_INTEGRITY_DIFF_EXIT_DIFF;

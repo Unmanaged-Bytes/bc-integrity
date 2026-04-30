@@ -1140,7 +1140,7 @@ static void test_writer_path_with_dot_prefix_uses_quoting(void **state) {
   assert_true(bc_hrbl_reader_find(reader, "entries.'.dotfile'.kind",
                                   strlen("entries.'.dotfile'.kind"),
                                   &value_ref));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_path_with_slash_uses_quoting(void **state) {
@@ -1158,7 +1158,7 @@ static void test_writer_path_with_slash_uses_quoting(void **state) {
   assert_true(bc_hrbl_reader_find(reader, "entries.'sub/nested.txt'.kind",
                                   strlen("entries.'sub/nested.txt'.kind"),
                                   &value_ref));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_path_simple_no_quoting(void **state) {
@@ -1175,7 +1175,7 @@ static void test_writer_path_simple_no_quoting(void **state) {
   bc_hrbl_value_ref_t value_ref;
   assert_true(bc_hrbl_reader_find(reader, "entries.simple.kind",
                                   strlen("entries.simple.kind"), &value_ref));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_summary_with_walltime_set(void **state) {
@@ -1195,7 +1195,7 @@ static void test_writer_summary_with_walltime_set(void **state) {
   uint64_t walltime = 0;
   assert_true(bc_hrbl_reader_get_uint64(&value_ref, &walltime));
   assert_int_equal(walltime, 5000u);
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_with_no_host_uses_unknown(void **state) {
@@ -1227,7 +1227,7 @@ static void test_writer_with_no_host_uses_unknown(void **state) {
   assert_true(bc_hrbl_reader_get_string(&value_ref, &host_value, &host_length));
   assert_int_equal(host_length, 7u);
   assert_memory_equal(host_value, "unknown", 7u);
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
   bc_containers_vector_destroy(fixture->memory_context, entries);
 }
 

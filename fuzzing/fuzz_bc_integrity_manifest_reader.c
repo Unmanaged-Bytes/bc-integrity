@@ -44,7 +44,7 @@ static int bc_integrity_fuzz_manifest_reader_one(const uint8_t *data,
         }
       }
     }
-    bc_hrbl_reader_destroy(reader);
+    bc_hrbl_reader_close(reader);
   }
   bc_allocators_context_destroy(memory);
   return 0;

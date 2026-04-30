@@ -537,7 +537,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
           memory_context, sizeof(bc_integrity_verify_record_t),
           BC_INTEGRITY_VERIFY_INITIAL_VECTOR_CAPACITY,
           BC_INTEGRITY_VERIFY_MAX_VECTOR_CAPACITY, &expected_records)) {
-    bc_hrbl_reader_destroy(reader);
+    bc_hrbl_reader_close(reader);
     *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
     return true;
   }
@@ -545,7 +545,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
   if (!bc_integrity_verify_collect_entries(memory_context, reader,
                                            expected_records)) {
     bc_containers_vector_destroy(memory_context, expected_records);
-    bc_hrbl_reader_destroy(reader);
+    bc_hrbl_reader_close(reader);
     bc_integrity_verify_emit_stderr(
         "bc-integrity: verify: failed to enumerate manifest entries\n");
     *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
@@ -558,7 +558,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
                                    BC_INTEGRITY_VERIFY_MAX_VECTOR_CAPACITY,
                                    &actual_entries)) {
     bc_containers_vector_destroy(memory_context, expected_records);
-    bc_hrbl_reader_destroy(reader);
+    bc_hrbl_reader_close(reader);
     *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
     return true;
   }
@@ -585,7 +585,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
     bc_runtime_error_collector_flush_to_stderr(errors, "bc-integrity");
     bc_containers_vector_destroy(memory_context, actual_entries);
     bc_containers_vector_destroy(memory_context, expected_records);
-    bc_hrbl_reader_destroy(reader);
+    bc_hrbl_reader_close(reader);
     *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
     return true;
   }
@@ -597,7 +597,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
       bc_runtime_error_collector_flush_to_stderr(errors, "bc-integrity");
       bc_containers_vector_destroy(memory_context, actual_entries);
       bc_containers_vector_destroy(memory_context, expected_records);
-      bc_hrbl_reader_destroy(reader);
+      bc_hrbl_reader_close(reader);
       *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
       return true;
     }
@@ -610,7 +610,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
           BC_INTEGRITY_VERIFY_MAX_VECTOR_CAPACITY, &actual_records)) {
     bc_containers_vector_destroy(memory_context, actual_entries);
     bc_containers_vector_destroy(memory_context, expected_records);
-    bc_hrbl_reader_destroy(reader);
+    bc_hrbl_reader_close(reader);
     *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
     return true;
   }
@@ -642,7 +642,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
         bc_containers_vector_destroy(memory_context, actual_records);
         bc_containers_vector_destroy(memory_context, actual_entries);
         bc_containers_vector_destroy(memory_context, expected_records);
-        bc_hrbl_reader_destroy(reader);
+        bc_hrbl_reader_close(reader);
         *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
         return true;
       }
@@ -657,7 +657,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
       bc_containers_vector_destroy(memory_context, actual_records);
       bc_containers_vector_destroy(memory_context, actual_entries);
       bc_containers_vector_destroy(memory_context, expected_records);
-      bc_hrbl_reader_destroy(reader);
+      bc_hrbl_reader_close(reader);
       *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
       return true;
     }
@@ -673,7 +673,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
       bc_containers_vector_destroy(memory_context, actual_records);
       bc_containers_vector_destroy(memory_context, actual_entries);
       bc_containers_vector_destroy(memory_context, expected_records);
-      bc_hrbl_reader_destroy(reader);
+      bc_hrbl_reader_close(reader);
       *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
       return true;
     }
@@ -696,7 +696,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
       bc_containers_vector_destroy(memory_context, actual_records);
       bc_containers_vector_destroy(memory_context, actual_entries);
       bc_containers_vector_destroy(memory_context, expected_records);
-      bc_hrbl_reader_destroy(reader);
+      bc_hrbl_reader_close(reader);
       *out_exit_code = BC_INTEGRITY_VERIFY_EXIT_ERROR;
       return true;
     }
@@ -912,7 +912,7 @@ bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
   bc_containers_vector_destroy(memory_context, actual_records);
   bc_containers_vector_destroy(memory_context, actual_entries);
   bc_containers_vector_destroy(memory_context, expected_records);
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 
   *out_exit_code = (change_count == 0) ? BC_INTEGRITY_VERIFY_EXIT_OK
                                        : BC_INTEGRITY_VERIFY_EXIT_DIFF;
