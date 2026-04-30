@@ -294,7 +294,10 @@ bool bc_integrity_manifest_write_to_file(
 
   if (!bc_hrbl_writer_finalize_to_file(writer, output_path)) {
     bc_integrity_manifest_emit_stderr(
-        "bc-integrity: failed to finalize manifest to file\n");
+        "bc-integrity: failed to finalize manifest to file (");
+    bc_integrity_manifest_emit_stderr(
+        bc_hrbl_writer_error_string(bc_hrbl_writer_last_error(writer)));
+    bc_integrity_manifest_emit_stderr(")\n");
     goto cleanup;
   }
   success = true;
