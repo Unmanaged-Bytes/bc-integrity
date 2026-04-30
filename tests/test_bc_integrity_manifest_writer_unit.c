@@ -144,7 +144,7 @@ static void test_writer_round_trip_via_reader(void **state) {
   assert_true(bc_hrbl_reader_get_uint64(&errors_ref, &errors_value));
   assert_int_equal(errors_value, 0u);
 
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
   bc_containers_vector_destroy(memory_context, entries);
   bc_allocators_context_destroy(memory_context);
 }
@@ -202,7 +202,7 @@ static void test_writer_handles_symlink_entry(void **state) {
   assert_int_equal(target_length, 8u);
   assert_memory_equal(target, "file.txt", 8u);
 
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
   bc_containers_vector_destroy(memory_context, entries);
   bc_allocators_context_destroy(memory_context);
 }

@@ -159,7 +159,7 @@ static void test_writer_meta_block_complete_fields(void **state) {
   assert_true(bc_hrbl_reader_find(reader, "meta.walk_options.include_hidden",
                                   strlen("meta.walk_options.include_hidden"),
                                   &value_ref));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_summary_block_fields(void **state) {
@@ -193,7 +193,7 @@ static void test_writer_summary_block_fields(void **state) {
                                   strlen("summary.errors_count"), &value_ref));
   assert_true(bc_hrbl_reader_get_uint64(&value_ref, &u_value));
   assert_int_equal(u_value, 7u);
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_empty_manifest_no_entries(void **state) {
@@ -216,7 +216,7 @@ static void test_writer_empty_manifest_no_entries(void **state) {
   assert_true(bc_hrbl_reader_find(reader, "entries", strlen("entries"),
                                   &value_ref));
 
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_error_entry_records_errno_and_message(void **state) {
@@ -262,7 +262,7 @@ static void test_writer_error_entry_records_errno_and_message(void **state) {
   assert_true(
       bc_hrbl_reader_get_string(&value_ref, &msg_value, &msg_value_length));
   assert_int_equal(msg_value_length, strlen(msg));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_skip_zero_length_relative_path(void **state) {
@@ -293,7 +293,7 @@ static void test_writer_skip_zero_length_relative_path(void **state) {
   assert_true(bc_hrbl_reader_find(reader, "entries.'kept.txt'.kind",
                                   strlen("entries.'kept.txt'.kind"),
                                   &value_ref));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void check_algorithm_label(fixture_state_t *fixture,
@@ -321,7 +321,7 @@ static void check_algorithm_label(fixture_state_t *fixture,
   assert_int_equal(s_length, strlen(expected));
   assert_memory_equal(s_value, expected, s_length);
 
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_xxh3_label(void **state) {
@@ -365,7 +365,7 @@ static void test_writer_directory_entry_no_digest(void **state) {
   assert_false(bc_hrbl_reader_find(reader, "entries.subdir.digest_hex",
                                    strlen("entries.subdir.digest_hex"),
                                    &value_ref));
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 static void test_writer_stress_thousand_entries(void **state) {
@@ -406,7 +406,7 @@ static void test_writer_stress_thousand_entries(void **state) {
                                   strlen("meta.file_count"), &value_ref));
   assert_true(bc_hrbl_reader_get_uint64(&value_ref, &u_value));
   assert_int_equal(u_value, entry_count);
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
   free(paths);
 }
 
@@ -459,7 +459,7 @@ static void test_writer_fifo_socket_device_kinds(void **state) {
                                   &value_ref));
   assert_true(bc_hrbl_reader_get_string(&value_ref, &s_value, &s_length));
   assert_memory_equal(s_value, "device", s_length);
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
 }
 
 int main(void) {

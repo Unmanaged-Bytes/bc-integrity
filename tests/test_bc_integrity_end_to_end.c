@@ -199,7 +199,7 @@ static void test_e2e_manifest_includes_files_dirs_symlinks(void **state) {
   assert_true(bc_hrbl_reader_get_uint64(&value_ref, &errors_count));
   assert_int_equal(errors_count, 0u);
 
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
   bc_allocators_context_destroy(memory_context);
 }
 

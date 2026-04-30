@@ -285,7 +285,7 @@ static void load_entries(const char *manifest_path, entry_table_t *out_table) {
   qsort(out_table->records, out_table->count, sizeof(entry_record_t),
         compare_entry_record);
 
-  bc_hrbl_reader_destroy(reader);
+  bc_hrbl_reader_close(reader);
   bc_allocators_context_destroy(memory_context);
 }
 
