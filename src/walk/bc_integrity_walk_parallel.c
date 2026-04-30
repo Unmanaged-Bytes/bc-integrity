@@ -9,11 +9,11 @@
 #include "bc_allocators.h"
 #include "bc_allocators_pool.h"
 #include "bc_concurrency.h"
-#include "bc_concurrency_signal.h"
 #include "bc_containers_vector.h"
 #include "bc_core.h"
 #include "bc_io_walk.h"
 #include "bc_runtime_error_collector.h"
+#include "bc_runtime_signal.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -26,6 +26,17 @@
 #define BC_INTEGRITY_WALK_MAX_VECTOR_CAPACITY ((size_t)1U << 28)
 #define BC_INTEGRITY_WALK_SERIAL_BUDGET_PER_WORKER ((size_t)256)
 #define BC_INTEGRITY_WALK_SERIAL_BUDGET_FLOOR ((size_t)4096)
+
+/* cppcheck-suppress constParameterCallback; signature fixed by bc_io_walk_should_stop_fn */
+static bool bc_integrity_walk_should_stop_check(void *user_data) {
+    const bc_runtime_signal_handler_t *handler = (const bc_runtime_signal_handler_t *)user_data;
+    if (handler == NULL) {
+        return false;
+    }
+    bool should_stop = false;
+    bc_runtime_signal_handler_should_stop(handler, &should_stop);
+    return should_stop;
+}
 
 typedef struct bc_integrity_walk_worker_slot {
   bc_containers_vector_t *entries;
@@ -394,7 +405,7 @@ static void bc_integrity_walk_merge_worker_slot(void *slot_data,
 static bool bc_integrity_walk_try_serial(
     bc_allocators_context_t *memory_context,
     const bc_concurrency_context_t *concurrency_context,
-    bc_concurrency_signal_handler_t *signal_handler,
+    bc_runtime_signal_handler_t *signal_handler,
     const bc_integrity_manifest_options_t *options,
     const char *canonical_root_path, size_t canonical_root_path_length,
     bc_containers_vector_t *destination_entries,
@@ -433,7 +444,7 @@ static bool bc_integrity_walk_try_serial(
 
 bool bc_integrity_walk_run(bc_allocators_context_t *memory_context,
                            bc_concurrency_context_t *concurrency_context,
-                           bc_concurrency_signal_handler_t *signal_handler,
+                           bc_runtime_signal_handler_t *signal_handler,
                            const bc_integrity_manifest_options_t *options,
                            const char *canonical_root_path,
                            size_t canonical_root_path_length,
@@ -496,7 +507,8 @@ bool bc_integrity_walk_run(bc_allocators_context_t *memory_context,
       .root_length = canonical_root_path_length,
       .main_memory_context = memory_context,
       .concurrency_context = concurrency_context,
-      .signal_handler = signal_handler,
+      .should_stop_check = bc_integrity_walk_should_stop_check,
+      .should_stop_user_data = signal_handler,
       .queue_capacity = 0,
       .follow_symlinks = options->follow_symlinks,
       .include_hidden = options->include_hidden,

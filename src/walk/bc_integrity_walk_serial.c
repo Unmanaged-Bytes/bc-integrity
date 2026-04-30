@@ -8,7 +8,7 @@
 
 #include "bc_allocators.h"
 #include "bc_allocators_pool.h"
-#include "bc_concurrency_signal.h"
+#include "bc_runtime_signal.h"
 #include "bc_containers_vector.h"
 #include "bc_core.h"
 #include "bc_io_dirent_reader.h"
@@ -29,7 +29,7 @@ typedef struct bc_integrity_walk_serial_context {
   bc_allocators_context_t *memory_context;
   bc_containers_vector_t *destination_entries;
   bc_runtime_error_collector_t *errors;
-  bc_concurrency_signal_handler_t *signal_handler;
+  bc_runtime_signal_handler_t *signal_handler;
   const bc_integrity_manifest_options_t *options;
   const bc_integrity_filter_t *filter;
   const char *canonical_root_path;
@@ -48,7 +48,7 @@ static bool bc_integrity_walk_serial_should_stop(
     return false;
   }
   bool should_stop = false;
-  bc_concurrency_signal_handler_should_stop(context->signal_handler,
+  bc_runtime_signal_handler_should_stop(context->signal_handler,
                                             &should_stop);
   return should_stop;
 }
@@ -360,7 +360,7 @@ static bool bc_integrity_walk_serial_recurse(
 
 bool bc_integrity_walk_run_serial_with_budget(
     bc_allocators_context_t *memory_context,
-    bc_concurrency_signal_handler_t *signal_handler,
+    bc_runtime_signal_handler_t *signal_handler,
     const bc_integrity_manifest_options_t *options,
     const char *canonical_root_path, size_t canonical_root_path_length,
     bc_containers_vector_t *destination_entries,
@@ -431,7 +431,7 @@ bool bc_integrity_walk_run_serial_with_budget(
 
 bool bc_integrity_walk_run_serial(
     bc_allocators_context_t *memory_context,
-    bc_concurrency_signal_handler_t *signal_handler,
+    bc_runtime_signal_handler_t *signal_handler,
     const bc_integrity_manifest_options_t *options,
     const char *canonical_root_path, size_t canonical_root_path_length,
     bc_containers_vector_t *destination_entries,

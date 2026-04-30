@@ -11,7 +11,7 @@
 
 #include "bc_allocators.h"
 #include "bc_concurrency.h"
-#include "bc_concurrency_signal.h"
+#include "bc_runtime_signal.h"
 #include "bc_containers_vector.h"
 #include "bc_core.h"
 #include "bc_core_io.h"
@@ -201,7 +201,7 @@ static bool bc_integrity_run_manifest(const bc_runtime_t *application,
     state->exit_code = 1;
     return false;
   }
-  bc_concurrency_signal_handler_t *signal_handler = NULL;
+  bc_runtime_signal_handler_t *signal_handler = NULL;
   bc_runtime_signal_handler(application, &signal_handler);
 
   if (!bc_integrity_resolve_canonical_root(state->manifest_options.root_path,
@@ -338,7 +338,7 @@ static bool bc_integrity_run_verify(const bc_runtime_t *application,
     state->exit_code = 1;
     return false;
   }
-  bc_concurrency_signal_handler_t *signal_handler = NULL;
+  bc_runtime_signal_handler_t *signal_handler = NULL;
   bc_runtime_signal_handler(application, &signal_handler);
 
   int verify_exit = 2;
