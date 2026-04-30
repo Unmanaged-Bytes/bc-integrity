@@ -256,7 +256,7 @@ bool bc_integrity_manifest_write_to_file(
     const bc_containers_vector_t *entries,
     const bc_integrity_manifest_summary_t *summary, const char *output_path) {
   bc_hrbl_writer_t *writer = NULL;
-  if (!bc_hrbl_writer_create(memory_context, &writer)) {
+  if (!bc_hrbl_writer_create(memory_context, NULL, &writer)) {
     bc_integrity_manifest_emit_stderr(
         "bc-integrity: failed to create hrbl writer\n");
     return false;
