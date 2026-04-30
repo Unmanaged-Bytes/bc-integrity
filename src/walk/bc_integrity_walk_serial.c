@@ -322,19 +322,28 @@ static bool bc_integrity_walk_serial_recurse(
   if (bc_integrity_walk_serial_should_stop(context)) {
     return true;
   }
-  bc_io_dirent_reader_t reader;
-  bc_io_dirent_reader_init(&reader, directory_fd);
+  bc_io_dirent_reader_t *reader = NULL;
+  if (!bc_io_dirent_reader_create(context->memory_context, directory_fd,
+                                  &reader)) {
+    (void)bc_runtime_error_collector_append(context->errors,
+                                            context->memory_context,
+                                            directory_path,
+                                            "dirent-reader-alloc", ENOMEM);
+    return true;
+  }
   while (true) {
     if (bc_integrity_walk_serial_should_stop(context)) {
-      return true;
+      break;
     }
     bc_io_dirent_entry_t dirent;
     bool has_entry = false;
-    if (!bc_io_dirent_reader_next(&reader, &dirent, &has_entry)) {
+    if (!bc_io_dirent_reader_next(reader, &dirent, &has_entry)) {
+      int reader_errno = 0;
+      bc_io_dirent_reader_last_errno(reader, &reader_errno);
       (void)bc_runtime_error_collector_append(context->errors,
                                               context->memory_context,
                                               directory_path, "getdents",
-                                              reader.last_errno);
+                                              reader_errno);
       break;
     }
     if (!has_entry) {
@@ -345,6 +354,7 @@ static bool bc_integrity_walk_serial_recurse(
                                                  directory_path_length,
                                                  &dirent);
   }
+  bc_io_dirent_reader_destroy(context->memory_context, reader);
   return true;
 }
 
