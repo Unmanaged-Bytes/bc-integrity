@@ -18,7 +18,7 @@
 
 #include "bc_allocators.h"
 #include "bc_concurrency.h"
-#include "bc_concurrency_signal.h"
+#include "bc_runtime_signal.h"
 #include "bc_containers_vector.h"
 #include "bc_core.h"
 #include "bc_core_hash.h"
@@ -430,11 +430,11 @@ static void test_dispatch_signal_stop_before_run(void **state) {
   }
   dispatch_ext_state_t *fixture = (dispatch_ext_state_t *)*state;
 
-  bc_concurrency_signal_handler_t *signal_handler = NULL;
-  assert_true(bc_concurrency_signal_handler_create(fixture->memory_context,
+  bc_runtime_signal_handler_t *signal_handler = NULL;
+  assert_true(bc_runtime_signal_handler_create(fixture->memory_context,
                                                    &signal_handler));
   assert_true(
-      bc_concurrency_signal_handler_install(signal_handler, SIGUSR1));
+      bc_runtime_signal_handler_install(signal_handler, SIGUSR1));
 
   size_t entry_count = 5;
   bc_containers_vector_t *entries = NULL;
@@ -461,7 +461,7 @@ static void test_dispatch_signal_stop_before_run(void **state) {
 
   free(paths);
   bc_containers_vector_destroy(fixture->memory_context, entries);
-  bc_concurrency_signal_handler_destroy(signal_handler);
+  bc_runtime_signal_handler_destroy(signal_handler);
 }
 
 static void test_dispatch_signal_stop_parallel_path(void **state) {
@@ -471,11 +471,11 @@ static void test_dispatch_signal_stop_parallel_path(void **state) {
   }
   dispatch_ext_state_t *fixture = (dispatch_ext_state_t *)*state;
 
-  bc_concurrency_signal_handler_t *signal_handler = NULL;
-  assert_true(bc_concurrency_signal_handler_create(fixture->memory_context,
+  bc_runtime_signal_handler_t *signal_handler = NULL;
+  assert_true(bc_runtime_signal_handler_create(fixture->memory_context,
                                                    &signal_handler));
   assert_true(
-      bc_concurrency_signal_handler_install(signal_handler, SIGUSR1));
+      bc_runtime_signal_handler_install(signal_handler, SIGUSR1));
 
   size_t entry_count = 24;
   bc_containers_vector_t *entries = NULL;
@@ -502,7 +502,7 @@ static void test_dispatch_signal_stop_parallel_path(void **state) {
 
   free(paths);
   bc_containers_vector_destroy(fixture->memory_context, entries);
-  bc_concurrency_signal_handler_destroy(signal_handler);
+  bc_runtime_signal_handler_destroy(signal_handler);
 }
 
 static void test_dispatch_parallel_ring_with_missing_file(void **state) {

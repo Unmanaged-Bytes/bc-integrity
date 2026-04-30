@@ -481,7 +481,7 @@ bc_integrity_verify_tally_change(bc_integrity_verify_change_kind_t kind,
 
 bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
                              bc_concurrency_context_t *concurrency_context,
-                             bc_concurrency_signal_handler_t *signal_handler,
+                             bc_runtime_signal_handler_t *signal_handler,
                              const bc_integrity_verify_options_t *options,
                              bc_runtime_error_collector_t *errors,
                              int *out_exit_code) {

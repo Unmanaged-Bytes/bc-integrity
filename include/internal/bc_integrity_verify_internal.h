@@ -8,7 +8,7 @@
 
 #include "bc_allocators.h"
 #include "bc_concurrency.h"
-#include "bc_concurrency_signal.h"
+#include "bc_runtime_signal.h"
 #include "bc_core_io.h"
 #include "bc_runtime_error_collector.h"
 
@@ -101,7 +101,7 @@ bool bc_integrity_verify_emit_json_summary(
 
 bool bc_integrity_verify_run(bc_allocators_context_t *memory_context,
                              bc_concurrency_context_t *concurrency_context,
-                             bc_concurrency_signal_handler_t *signal_handler,
+                             bc_runtime_signal_handler_t *signal_handler,
                              const bc_integrity_verify_options_t *options,
                              bc_runtime_error_collector_t *errors,
                              int *out_exit_code);

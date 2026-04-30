@@ -38,7 +38,7 @@ typedef struct bc_integrity_dispatch_context {
   size_t ring_slot_index;
   bool ring_enabled;
   bc_integrity_digest_algorithm_t digest_algorithm;
-  bc_concurrency_signal_handler_t *signal_handler;
+  bc_runtime_signal_handler_t *signal_handler;
 } bc_integrity_dispatch_context_t;
 
 static bool bc_integrity_dispatch_descriptor_size_descending(
@@ -52,12 +52,12 @@ static bool bc_integrity_dispatch_descriptor_size_descending(
 }
 
 static bool bc_integrity_dispatch_should_stop(
-    const bc_concurrency_signal_handler_t *signal_handler) {
+    const bc_runtime_signal_handler_t *signal_handler) {
   if (signal_handler == NULL) {
     return false;
   }
   bool should_stop = false;
-  bc_concurrency_signal_handler_should_stop(signal_handler, &should_stop);
+  bc_runtime_signal_handler_should_stop(signal_handler, &should_stop);
   return should_stop;
 }
 
@@ -298,7 +298,7 @@ static void bc_integrity_dispatch_iteration(size_t iteration_index,
 
 static void bc_integrity_dispatch_run_sequential(
     bc_containers_vector_t *entries,
-    const bc_concurrency_signal_handler_t *signal_handler,
+    const bc_runtime_signal_handler_t *signal_handler,
     bc_integrity_digest_algorithm_t digest_algorithm) {
   size_t entry_count = bc_containers_vector_length(entries);
   for (size_t index = 0; index < entry_count; ++index) {
@@ -343,7 +343,7 @@ static void bc_integrity_dispatch_ring_destroy(void *data, size_t worker_index,
 bool bc_integrity_dispatch_compute_digests(
     bc_allocators_context_t *memory_context,
     bc_concurrency_context_t *concurrency_context,
-    bc_concurrency_signal_handler_t *signal_handler,
+    bc_runtime_signal_handler_t *signal_handler,
     bc_integrity_digest_algorithm_t digest_algorithm,
     bc_containers_vector_t *entries) {
   bc_integrity_dispatch_descriptor_t *descriptors = NULL;

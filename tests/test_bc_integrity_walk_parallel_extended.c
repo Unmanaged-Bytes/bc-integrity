@@ -18,7 +18,7 @@
 
 #include "bc_allocators.h"
 #include "bc_concurrency.h"
-#include "bc_concurrency_signal.h"
+#include "bc_runtime_signal.h"
 #include "bc_containers_vector.h"
 #include "bc_core.h"
 #include "bc_integrity_cli_internal.h"
@@ -470,10 +470,10 @@ static void test_walk_parallel_signal_stop_interrupts(void **state) {
   walk_parallel_state_t *fixture = (walk_parallel_state_t *)*state;
   create_file_at(fixture->directory_path, "small.txt", "s");
 
-  bc_concurrency_signal_handler_t *signal_handler = NULL;
-  assert_true(bc_concurrency_signal_handler_create(fixture->memory_context,
+  bc_runtime_signal_handler_t *signal_handler = NULL;
+  assert_true(bc_runtime_signal_handler_create(fixture->memory_context,
                                                    &signal_handler));
-  assert_true(bc_concurrency_signal_handler_install(signal_handler, SIGUSR1));
+  assert_true(bc_runtime_signal_handler_install(signal_handler, SIGUSR1));
   raise(SIGUSR1);
 
   bc_containers_vector_t *entries = make_entries_vector(fixture);
@@ -489,7 +489,7 @@ static void test_walk_parallel_signal_stop_interrupts(void **state) {
   (void)walk_ok;
 
   bc_containers_vector_destroy(fixture->memory_context, entries);
-  bc_concurrency_signal_handler_destroy(signal_handler);
+  bc_runtime_signal_handler_destroy(signal_handler);
 }
 
 static void test_walk_parallel_serial_when_one_worker(void **state) {
